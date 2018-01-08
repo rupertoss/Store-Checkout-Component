@@ -1,6 +1,5 @@
 package com.rupertoss.checkout.controller;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,5 @@ public class ItemController {
 	@GetMapping("/{id}")
 	public Item getItems(@PathVariable(value = "id") int id) {
 		return itemService.getItem(id);
-	}
-	
-	@GetMapping("/{from}-{to}")
-	public List<Item> getItems(@PathVariable(value = "from") int from, @PathVariable(value = "to") int to){
-		List<Integer> range = new LinkedList<>();
-		for(int i = 0; i <= to - from; i++) {
-			range.add(from + i);
-		}
-		return itemService.getItems(range);
 	}
 }

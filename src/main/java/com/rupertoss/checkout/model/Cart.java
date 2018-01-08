@@ -3,6 +3,7 @@ package com.rupertoss.checkout.model;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class Cart {
 	public long id;
 	
 	@NotNull
+	@ElementCollection
 	public Map<Integer, Integer> items = new TreeMap<Integer, Integer>();
 	
 	public double value;

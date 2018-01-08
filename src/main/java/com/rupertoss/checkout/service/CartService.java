@@ -1,10 +1,12 @@
 package com.rupertoss.checkout.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.rupertoss.checkout.model.Cart;
 import com.rupertoss.checkout.repository.CartRepository;
 
+@Service
 public class CartService {
 	
 	@Autowired
@@ -18,6 +20,7 @@ public class CartService {
 	}
 	
 	public void addCart(Cart cart) {
+		cart.setValue(calculateCartValue(cart));
 		cartRepository.save(cart);
 	}
 	
@@ -25,9 +28,8 @@ public class CartService {
 		Cart cartToUpdate = cartRepository.findOne(id);
 		if(cartToUpdate != null) {
 			
-			cartToUpdate.setId(cart.getId());
 			cartToUpdate.setItems(cart.getItems());
-			cartToUpdate.setValue(cart.getValue());
+			cartToUpdate.setValue(calculateCartValue(cart));
 			
 			cartRepository.save(cartToUpdate);	
 		}
@@ -40,16 +42,14 @@ public class CartService {
 		}
 	}
 	
-	public void calculateValue(Cart cartToCaluculate) {
-		Cart cart = cartRepository.findOne(cartToCaluculate.getId());
-		if(cart != null) {
-			if (cart.getItems().isEmpty()) {
-				cart.setValue(0);
-			} else {
-				cart.getItems().forEach((k,v) -> {
-					cart.setValue(cart.getValue() + itemService.calculateValue(k, v));
-				}); 
-			}
+	public double calculateCartValue(Cart cart) {
+		if (cart.getItems().isEmpty()) {
+			cart.setValue(0);
+		} else {
+			cart.getItems().forEach((k,v) -> {
+				cart.setValue(cart.getValue() + itemService.calculateItemValue(k, v));
+			}); 
 		}
+		return cart.getValue();
 	}
 }

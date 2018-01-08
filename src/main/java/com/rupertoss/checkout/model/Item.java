@@ -18,9 +18,6 @@ public class Item {
 	public int id;
 	
 	@NotBlank
-	public int stock;
-	
-	@NotBlank
 	public double price;
 	
 	@NotBlank
@@ -39,14 +36,6 @@ public class Item {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getStock() {
-		return stock;
-	}
-
-	public void setStock(int stock) {
-		this.stock = stock;
 	}
 
 	public double getPrice() {

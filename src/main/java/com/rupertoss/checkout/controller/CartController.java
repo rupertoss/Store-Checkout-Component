@@ -36,7 +36,6 @@ public class CartController {
 	@PutMapping("/{id}")
 	public void updateCart(@PathVariable(value = "id") long id, @Valid @RequestBody Cart cart) {
 		cartService.updateCart(id, cart);
-		cartService.calculateValue(cart);
 	}
 	
 	@DeleteMapping("/{id}")
