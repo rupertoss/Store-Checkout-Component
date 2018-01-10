@@ -49,7 +49,7 @@ public class ItemService {
 	public double calculateItemCost(Integer id, Integer quantity) {
 		Item item = itemRepository.findOne(id);
 		if(quantity >= item.getSpecialQuantity()) {
-			return (item.getSpecialQuantity()) * quantity;
+			return (item.getSpecialPrice() * quantity);
 		} else {
 			return item.getPrice() * quantity;
 		}
