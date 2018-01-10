@@ -12,14 +12,21 @@ import com.rupertoss.checkout.repository.PromotionRepository;
 @Service
 public class PromotionService {
 
+	// The PromotionRepository business service.
 	@Autowired
 	private PromotionRepository promotionRepository;
 	
-	public Promotion getPromotion(String code) {
+	/**
+	 * Get a single Promotion entity by code.
+	 * 
+	 * @param code A String promotion code.
+	 * @return A Promotion with given code or null if none found.
+	 */
+	public Promotion getByCode(String code) {
 		List<Promotion> promotions = new ArrayList<>();
 		promotionRepository.findAll().forEach(promotions::add);
 		for(Promotion promo: promotions) {
-			if(promo.getCode() == code)
+			if(promo.getCode().equals(code))
 				return promo;
 		}
 		return null;

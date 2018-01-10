@@ -1,5 +1,7 @@
 package com.rupertoss.checkout.controller;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +52,36 @@ public class CartController {
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
 	
+	/**
+	 * Web service endpoint to fetch a single Cart entity by primary key with Promotion code.
+	 * If Cart not found, the service return an empty response body with HTTP status 404.
+	 * If Promotion not found, the regularly priced Cart is returned as JSON with HTTP status 404. 
+	 * If Promotion found, but no longer valid, the regularly priced Cart is returned as JSON with HTTP status 409.
+	 * If Promotion found and valid, the discounted Cart is returned as JSON with HTTP status 200.
+	 * 
+	 * @param id A Long URL path variable containing primary key identifier.
+	 * @param code A String URL path variable containing Promotion code.
+	 * @return A ResponseEntity containing a single Cart object, if found, 
+	 * 			in dependence of Promotion and HTTP status code as described above.
+	 */
 	@GetMapping("api/carts/{id}/{code}")
-	public Cart getCartWithPromotion(@PathVariable(value = "id") Long id, @PathVariable(value = "code") String code) {
-		Promotion promotion = promotionService.getPromotion(code);
+	public ResponseEntity<Cart> getCartWithPromotion(@PathVariable(value = "id") Long id, @PathVariable(value = "code") String code) {
+
 		Cart cart = cartService.getById(id);
+			if(cart == null) {
+				return new ResponseEntity<Cart>(HttpStatus.NOT_FOUND);
+			}
+			
+		Promotion promotion = promotionService.getByCode(code);
+			if(promotion == null) {
+				return new ResponseEntity<Cart>(cart, HttpStatus.NOT_FOUND);
+			}
+			if(promotion.getValidTill().after(new Date())) {
+				return new ResponseEntity<Cart>(cart, HttpStatus.CONFLICT);
+			}
+		cart.setValue(cart.getValue() * (promotion.getDiscount() / 100));
 		
-		return null;
+		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
 	
 	/**
