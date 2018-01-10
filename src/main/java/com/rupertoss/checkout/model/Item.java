@@ -17,30 +17,30 @@ public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-	public int id;
+	private Integer id;
 	
 	@NotBlank
 	@Column(name = "Price")
-	public double price;
+	private double price;
 	
 	@NotBlank
 	@Lob
 	@Column(name = "Description")
-	public String description;
+	private String description;
 	
 	@NotBlank
 	@Column(name = "SpecialQuantity")
-	public int specialQuantity;
+	private int specialQuantity;
 	
 	@NotBlank
 	@Column(name = "SpecialPrice")
-	public double specialPrice;
+	private double specialPrice;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

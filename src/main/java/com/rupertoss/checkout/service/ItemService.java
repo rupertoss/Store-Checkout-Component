@@ -12,26 +12,46 @@ import com.rupertoss.checkout.repository.ItemRepository;
 @Service
 public class ItemService {
 	
+	// The Spring Data repository for Item entities.
 	@Autowired
 	private ItemRepository itemRepository;
 	
-	public List<Item> getAllItems() {
+	/**
+	 * Get all Item entities.
+	 * 
+	 * @return A List of Item objects.
+	 */
+	public List<Item> getAll() {
 		List<Item> items = new ArrayList<>();
 		itemRepository.findAll().forEach(items::add);
 		return items;
 	}
 	
-	public Item getItem(int id) {
+	/**
+	 * Get a single Item entity by primary key identifier.
+	 * 
+	 * @param id An Integer primary key identifier.
+	 * @return An Item or null if none found.
+	 */
+	public Item getById(Integer id) {
 		return itemRepository.findOne(id);
 	}
 	
-	public double calculateItemValue(int id, int quantity) {
+	/**
+	 * Calculates cost of single Item entity by multiplying required quantity
+	 * 	by its price or special price if required quantity is greater or equal
+	 * 	special quantity.
+	 * 	
+	 * @param id An Integer primary key identifier of Item entity.
+	 * @param quantity An Integer quantity.
+	 * @return A Double representing cost of Item.
+	 */
+	public double calculateItemCost(Integer id, Integer quantity) {
 		Item item = itemRepository.findOne(id);
-		if(quantity >= item.specialQuantity) {
-			return (item.specialPrice) * quantity;
+		if(quantity >= item.getSpecialQuantity()) {
+			return (item.getSpecialQuantity()) * quantity;
 		} else {
-			return item.price * quantity;
+			return item.getPrice() * quantity;
 		}
 	}
-	
 }

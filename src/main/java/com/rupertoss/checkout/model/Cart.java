@@ -1,7 +1,7 @@
 package com.rupertoss.checkout.model;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -22,23 +22,23 @@ public class Cart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
-	public long id;
+	private Long id;
 	
 	@NotNull
 	@ElementCollection
 	@CollectionTable(name="Cart_Items", joinColumns = @JoinColumn(name = "ID"))
 	@MapKeyColumn(name = "ItemID")
 	@Column(name = "ItemQuantity")
-	public Map<Integer, Integer> items = new TreeMap<Integer, Integer>();
+	private Map<Integer, Integer> items = new HashMap<Integer, Integer>();
 	
-	@Column(name = "CartValue")
-	public double value;
+	@Column(name = "Value")
+	private double value;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

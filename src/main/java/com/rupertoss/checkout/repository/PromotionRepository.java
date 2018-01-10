@@ -3,10 +3,9 @@ package com.rupertoss.checkout.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.rupertoss.checkout.model.Cart;
+import com.rupertoss.checkout.model.Promotion;
 
 @Repository
-public interface CartRepository extends CrudRepository<Cart, Long> {
+public interface PromotionRepository extends CrudRepository<Promotion, Integer>{
 
 }
-
