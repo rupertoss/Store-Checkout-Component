@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rupertoss.checkout.Application;
 import com.rupertoss.checkout.model.Cart;
+import com.rupertoss.checkout.model.Promotion;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
@@ -198,5 +199,23 @@ public class CartServiceTest {
 		
 		Assert.assertNotNull("failure - expected not null", cart);
 		Assert.assertEquals("failure - expected value attribute match", 160.0, cart.getValue(), 0.001);
+	}
+	
+	@Test
+	public void testCalculateCartValueWithPromotion() {
+		Cart cart = new Cart();
+		
+		Map<Integer, Integer> items = new HashMap<>();
+		items.put(1, 1);
+		items.put(3, 5);
+		cart.setItems(items);
+		
+		Promotion promotion = new Promotion();
+		promotion.setDiscount(10);
+		
+		Double cartValueWithPromotion = cartService.calculateCartValueWithPromotion(cart, promotion);
+		
+		Assert.assertNotNull("failure - expected not null", cartValueWithPromotion);
+		Assert.assertEquals("failure - expected value attribute match", 144.0, cart.getValue(), 0.001);
 	}
 }

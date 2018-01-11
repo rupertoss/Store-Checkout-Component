@@ -28,7 +28,7 @@ public class ItemController {
 	 * 
 	 * @return A ResponseEntity containing a List of Items objects.
 	 */
-	@GetMapping(value = "api/items", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Item>> getAllItems() {
 		return new ResponseEntity<List<Item>>(itemService.getAll(), HttpStatus.OK);
 	}

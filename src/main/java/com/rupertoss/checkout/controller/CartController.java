@@ -43,7 +43,7 @@ public class CartController {
 	 * @return A ResponseEntity containing a single Cart object, if found,
 	 * 			and a HTTP status code as described above.
 	 */
-	@GetMapping(value = "api/carts/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Cart> getCart(@PathVariable(value = "id") Long id) {
 		Cart cart = cartService.getById(id);
 		if(cart == null) {
@@ -64,7 +64,7 @@ public class CartController {
 	 * @return A ResponseEntity containing a single Cart object, if found, 
 	 * 			in dependence of Promotion and HTTP status code as described above.
 	 */
-	@GetMapping("api/carts/{id}/{code}")
+	@GetMapping("/{id}/{code}")
 	public ResponseEntity<Cart> getCartWithPromotion(@PathVariable(value = "id") Long id, @PathVariable(value = "code") String code) {
 
 		Cart cart = cartService.getById(id);
@@ -79,7 +79,7 @@ public class CartController {
 			if(promotion.getValidTill().after(new Date())) {
 				return new ResponseEntity<Cart>(cart, HttpStatus.CONFLICT);
 			}
-		cart.setValue(cart.getValue() * (promotion.getDiscount() / 100));
+		cartService.calculateCartValueWithPromotion(cart, promotion);
 		
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}
@@ -96,7 +96,7 @@ public class CartController {
 	 * @return A ResponseEntity containing a single Cart object, if created successfully,
 	 * 			and a HTTP status code as described above.
 	 */
-	@PostMapping(value = "api/carts", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Cart> createCart(@Valid @RequestBody Cart cart) {
 		Cart savedCart = cartService.create(cart);
 		return new ResponseEntity<Cart>(savedCart, HttpStatus.CREATED);
@@ -114,11 +114,11 @@ public class CartController {
 	 * @return A ReponseEntity containing a single Cart object, if updated successfully,
 	 * 			and a HTTP status code as described above.
 	 */
-	@PutMapping(value = "api/carts/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Cart> updateCart(@Valid @RequestBody Cart cart) {
 		Cart updatedCart = cartService.update(cart);
 		if(updatedCart == null) {
-			return new ResponseEntity<Cart>(updatedCart, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Cart>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
 		
 		return new ResponseEntity<Cart>(updatedCart, HttpStatus.OK);
@@ -133,7 +133,7 @@ public class CartController {
 	 * @param id A Long URL path variable containing the Cart primary key identifier.
 	 * @return A ResponseEntity with an empty response body and a HTTP status code as described above.
 	 */
-	@DeleteMapping("api/carts/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<Cart> deleteCart(@PathVariable(value = "id") Long id) {
 		cartService.delete(id);
 		return new ResponseEntity<Cart>(HttpStatus.NO_CONTENT);

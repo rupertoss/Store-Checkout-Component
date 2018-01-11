@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.rupertoss.checkout.model.Cart;
+import com.rupertoss.checkout.model.Promotion;
 import com.rupertoss.checkout.repository.CartRepository;
 
 @Service
@@ -85,7 +86,7 @@ public class CartService {
 	 * If Cart is empty returns 0.
 	 * 
 	 * @param cart A Cart object to calculate its value.
-	 * @return Double representing value of Cart.
+	 * @return Double Cart value.
 	 */
 	public double calculateCartValue(Cart cart) {
 		cart.setValue(0);
@@ -94,6 +95,18 @@ public class CartService {
 				cart.setValue(cart.getValue() + itemService.calculateItemCost(k, v));
 			}); 
 		}
+		return cart.getValue();
+	}
+
+	/**
+	 * Calculate value of single Cart entity with promotion discount.
+	 * 
+	 * @param cart A Cart object to calculate its value.
+	 * @param promotion A Promotion object containing discount.
+	 * @return Double Cart value with promotion discount.
+	 */
+	public double calculateCartValueWithPromotion(Cart cart, Promotion promotion) {
+		cart.setValue(calculateCartValue(cart) * (100 - promotion.getDiscount()) / 100);
 		return cart.getValue();
 	}
 }
