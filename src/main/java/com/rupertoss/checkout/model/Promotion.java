@@ -1,6 +1,6 @@
 package com.rupertoss.checkout.model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -29,13 +30,16 @@ public class Promotion {
 	@Column(name = "Description")
 	private String description;
 	
-	@NotBlank
+	@NotNull
 	@Column(name = "Discount")
 	private double discount;
 
-	@NotBlank
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date validTill;
+	private Calendar validTill;
+
+	public Promotion() {
+	}
 
 	public int getId() {
 		return id;
@@ -69,11 +73,11 @@ public class Promotion {
 		this.discount = discount;
 	}
 
-	public Date getValidTill() {
+	public Calendar getValidTill() {
 		return validTill;
 	}
 
-	public void setValidTill(Date validTill) {
+	public void setValidTill(Calendar validTill) {
 		this.validTill = validTill;
 	}
 }

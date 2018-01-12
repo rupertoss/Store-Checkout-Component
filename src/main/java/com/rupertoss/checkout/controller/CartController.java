@@ -1,6 +1,6 @@
 package com.rupertoss.checkout.controller;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.validation.Valid;
 
@@ -76,7 +76,7 @@ public class CartController {
 			if(promotion == null) {
 				return new ResponseEntity<Cart>(cart, HttpStatus.NOT_FOUND);
 			}
-			if(promotion.getValidTill().after(new Date())) {
+			if(!promotion.getValidTill().after(Calendar.getInstance())) {
 				return new ResponseEntity<Cart>(cart, HttpStatus.CONFLICT);
 			}
 		cartService.calculateCartValueWithPromotion(cart, promotion);

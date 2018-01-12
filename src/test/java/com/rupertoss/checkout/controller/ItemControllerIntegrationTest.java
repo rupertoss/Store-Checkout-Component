@@ -1,20 +1,18 @@
 package com.rupertoss.checkout.controller;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,60 +20,57 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.rupertoss.checkout.AbstractControllerTest;
 import com.rupertoss.checkout.Application;
 import com.rupertoss.checkout.model.Item;
-import com.rupertoss.checkout.service.ItemService;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @WebAppConfiguration
 @Transactional
-public class ItemControllerTest extends AbstractControllerTest {
-
-	public MockMvc mvc;
+@SqlGroup({
+	@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:beforeTestRun.sql"),
+	@Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:afterTestRun.sql")
+})
+public class ItemControllerIntegrationTest extends AbstractControllerTest {
 	
-	@Mock
-	public ItemService itemService;
+	private MockMvc mvc;
 	
-	@InjectMocks
-	public ItemController itemController;
+	@Autowired
+	private WebApplicationContext webApplicationContext;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		
-		mvc = MockMvcBuilders.standaloneSetup(itemController).build();
+		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 	}
 	
-	@Test
-	public void testGetAllItems() throws Exception {
-		
-		List<Item> items = getItemListStubData();
-		
-		when(itemService.getAll()).thenReturn(items);
-		
-		String uri = "/api/items";
-		
-		MvcResult result = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON)).andReturn();
-		
-		String content = result.getResponse().getContentAsString();
-		int status = result.getResponse().getStatus();
-		
-		verify(itemService, times(1)).getAll();
-		
-		Assert.assertEquals("failure - expected HTTP status 200", 200, status);
-		Assert.assertTrue("failure - expected HTTP response body to have a value", content.trim().length() > 0);
-	}
-	
+    @Test
+    public void testGetAllItems() throws Exception {
+    	List<Item> items = getItemListStubData();
+    	String json = mapToJson(items);
+
+        String uri = "/api/items";
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get(uri)
+                .accept(MediaType.APPLICATION_JSON)).andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        int status = result.getResponse().getStatus();
+
+        Assert.assertEquals("failure - expected HTTP status", 200, status);
+        Assert.assertTrue("failure - expected HTTP response body to match", content.equals(json));
+    }
+    
 	@Test
 	public void testGetItemById() throws Exception {
 		Integer id = new Integer(1);
 		Item item = getItem1StubData();
 		
-		when(itemService.getById(id)).thenReturn(item);
+    	String json = mapToJson(item);
 		
 		String uri = "/api/items/{id}";
 		
@@ -84,26 +79,20 @@ public class ItemControllerTest extends AbstractControllerTest {
 		String content = result.getResponse().getContentAsString();
 		int status = result.getResponse().getStatus();
 		
-		verify(itemService, times(1)).getById(id);
-		
 		Assert.assertEquals("failure - expected HTTP status 200", 200, status);
-		Assert.assertTrue("failure - expected HTTP response body to have a value", content.trim().length() > 0);
+		Assert.assertTrue("failure - expected HTTP response body to match", content.equals(json));
 	}
 	
 	@Test 
 	public void testGetItemByIdNotFound() throws Exception {
 		Integer id = Integer.MAX_VALUE;
 		
-		when(itemService.getById(id)).thenReturn(null);
-		
 		String uri = "/api/items/{id}";
 		
 		MvcResult result = mvc.perform(MockMvcRequestBuilders.get(uri, id).accept(MediaType.APPLICATION_JSON)).andReturn();
 		
 		String content = result.getResponse().getContentAsString();
 		int status = result.getResponse().getStatus();
-		
-		verify(itemService, times(1)).getById(id);
 		
 		Assert.assertEquals("failure - expected HTTP status 404", 404, status);
 		Assert.assertTrue("failure - expected HTTP response body to be empty", content.trim().length() == 0);

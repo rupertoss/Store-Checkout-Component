@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -19,7 +20,7 @@ public class Item {
 	@Column(name = "ID")
 	private Integer id;
 	
-	@NotBlank
+	@NotNull
 	@Column(name = "Price")
 	private double price;
 	
@@ -28,13 +29,16 @@ public class Item {
 	@Column(name = "Description")
 	private String description;
 	
-	@NotBlank
+	@NotNull
 	@Column(name = "SpecialQuantity")
 	private int specialQuantity;
 	
-	@NotBlank
+	@NotNull
 	@Column(name = "SpecialPrice")
 	private double specialPrice;
+	
+	public Item() {
+	}
 
 	public Integer getId() {
 		return id;

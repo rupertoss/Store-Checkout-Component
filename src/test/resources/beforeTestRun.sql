@@ -59,4 +59,6 @@ INSERT INTO `item` (`id`,`description`,`price`,`special_price`,`special_quantity
 INSERT INTO `item` (`id`,`description`,`price`,`special_price`,`special_quantity`) VALUES (4,'Product D',5,4.5,15);
 INSERT INTO `item` (`id`,`description`,`price`,`special_price`,`special_quantity`) VALUES (5,'Product E',25,20,2);
 
-INSERT INTO `promotion` (`id`,`code`,`description`,`discount`,`valid_till`) VALUES(1,'10%OFF','Reduces items cost by 10%','10','2018-01-30 12:00:00')
+
+INSERT INTO `promotion` (`id`,`code`,`description`,`discount`,`valid_till`) VALUES(1,'10%OFF','Reduces items cost by 10%','10','2019-01-30 12:00:00');
+INSERT INTO `promotion` (`id`,`code`,`description`,`discount`,`valid_till`) VALUES(2,'5%OFF','Reduces items cost by 5%','5','2017-01-30 12:00:00')

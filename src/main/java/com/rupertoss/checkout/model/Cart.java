@@ -33,6 +33,9 @@ public class Cart {
 	
 	@Column(name = "Value")
 	private double value;
+	
+	public Cart() {
+	}
 
 	public Long getId() {
 		return id;
