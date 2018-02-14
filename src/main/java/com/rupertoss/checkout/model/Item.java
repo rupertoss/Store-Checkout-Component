@@ -79,7 +79,10 @@ public class Item {
 	public void setSpecialPrice(double specialPrice) {
 		this.specialPrice = specialPrice;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", price=" + price + ", description=" + description + ", specialQuantity="
+				+ specialQuantity + ", specialPrice=" + specialPrice + "]";
+	}
 }

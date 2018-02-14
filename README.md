@@ -8,7 +8,7 @@ It's written as REST API platform.
 ## Project Details
 
 Project uses Spring Boot and dependencies are controlled by Maven.
-Data is stored in MySQL database and project uses Hibernate to communicate.
+Data is stored in H2 database and project uses Hibernate to communicate.
 
 So far project supports actions only from customer perspective. That means that customer can get Item details, can perform CRUD operation on Cart and have no option to modify Promotions.
 
@@ -50,8 +50,8 @@ Clone the project to your host machine.
 
 Add administrator view perspective to perform more operations like adding items, promotions and more.
 
-Spring Security
-Hibernate HQL queries
-OneToMany/ManyToMany etc. mapping
-Logger
-Actuator
+* Spring Security
+* Hibernate HQL queries
+* OneToMany/ManyToMany etc. mapping
+* Logger
+* Actuator

@@ -80,4 +80,10 @@ public class Promotion {
 	public void setValidTill(Calendar validTill) {
 		this.validTill = validTill;
 	}
+
+	@Override
+	public String toString() {
+		return "Promotion [id=" + id + ", code=" + code + ", description=" + description + ", discount=" + discount
+				+ ", validTill=" + validTill + "]";
+	}
 }
