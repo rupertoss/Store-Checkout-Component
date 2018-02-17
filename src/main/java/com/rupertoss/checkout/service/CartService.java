@@ -13,11 +13,9 @@ import com.rupertoss.checkout.repository.CartRepository;
 @Service
 public class CartService {
 	
-	// The Spring Data repository for Cart entities.
 	@Autowired
 	CartRepository cartRepository;
 	
-	// The ItemService business service.
 	@Autowired
 	ItemService itemService;
 	
@@ -59,7 +57,6 @@ public class CartService {
 		
 		if(cartToUpdate == null) 
 			throw new NoResultException("Requested entity not found.");
-		
 		
 		cartToUpdate.setItems(cart.getItems());
 		cartToUpdate.setValue(calculateCartValue(cart));

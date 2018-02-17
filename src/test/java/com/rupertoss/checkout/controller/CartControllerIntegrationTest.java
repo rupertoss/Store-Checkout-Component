@@ -136,7 +136,7 @@ public class CartControllerIntegrationTest extends AbstractControllerTest {
 		
 		String json = mapToJson(cart);
 		
-		Assert.assertEquals("failure - expected HTTP status 404", 404, status);
+		Assert.assertEquals("failure - expected HTTP status 409", 409, status);
 		Assert.assertTrue("failure - expected HTTP response body to match", content.equals(json));
 	}
 	

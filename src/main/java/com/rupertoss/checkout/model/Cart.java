@@ -36,6 +36,12 @@ public class Cart {
 	
 	public Cart() {
 	}
+	
+	public Cart(Long id, Map<Integer, Integer> items, double value) {
+		this.id = id;
+		this.items = items;
+		this.value = value;
+	}
 
 	public Long getId() {
 		return id;

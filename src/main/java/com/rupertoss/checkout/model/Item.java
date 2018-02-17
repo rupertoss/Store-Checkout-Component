@@ -40,6 +40,14 @@ public class Item {
 	public Item() {
 	}
 
+	public Item(Integer id, double price, String description, int specialQuantity, double specialPrice) {
+		this.id = id;
+		this.price = price;
+		this.description = description;
+		this.specialQuantity = specialQuantity;
+		this.specialPrice = specialPrice;
+	}
+
 	public Integer getId() {
 		return id;
 	}

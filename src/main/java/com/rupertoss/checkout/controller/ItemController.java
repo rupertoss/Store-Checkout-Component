@@ -18,7 +18,6 @@ import com.rupertoss.checkout.service.ItemService;
 @RequestMapping("api/items")
 public class ItemController {
 	
-	// The ItemService business service.
 	@Autowired
 	private ItemService itemService;
 	

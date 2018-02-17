@@ -1,7 +1,5 @@
 package com.rupertoss.checkout.controller;
 
-import java.util.Calendar;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +24,9 @@ import com.rupertoss.checkout.service.PromotionService;
 @RequestMapping("api/carts")
 public class CartController {
 	
-	// The CartService business service.
 	@Autowired
 	private CartService cartService;
 	
-	//	The PromotionService business service.
 	@Autowired
 	private PromotionService promotionService;
 	
@@ -55,8 +51,7 @@ public class CartController {
 	/**
 	 * Web service endpoint to fetch a single Cart entity by primary key with Promotion code.
 	 * If Cart not found, the service return an empty response body with HTTP status 404.
-	 * If Promotion not found, the regularly priced Cart is returned as JSON with HTTP status 404. 
-	 * If Promotion found, but no longer valid, the regularly priced Cart is returned as JSON with HTTP status 409.
+	 * If Promotion discount attribute is 0.0 (not found or found, but no longer valid), the regularly priced Cart is returned as JSON with HTTP status 409.
 	 * If Promotion found and valid, the discounted Cart is returned as JSON with HTTP status 200.
 	 * 
 	 * @param id A Long URL path variable containing primary key identifier.
@@ -73,12 +68,10 @@ public class CartController {
 			}
 			
 		Promotion promotion = promotionService.getByCode(code);
-			if(promotion == null) {
-				return new ResponseEntity<Cart>(cart, HttpStatus.NOT_FOUND);
-			}
-			if(!promotion.getValidTill().after(Calendar.getInstance())) {
+			if(promotion.getDiscount() == 0.0) {
 				return new ResponseEntity<Cart>(cart, HttpStatus.CONFLICT);
 			}
+			
 		cartService.calculateCartValueWithPromotion(cart, promotion);
 		
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);

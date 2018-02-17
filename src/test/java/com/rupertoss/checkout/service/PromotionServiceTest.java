@@ -42,6 +42,6 @@ public class PromotionServiceTest {
 		
 		Promotion promotion = promotionService.getByCode(code);
 		
-		Assert.assertNull("failure - expected to be null", promotion);
+		Assert.assertEquals("failure - expected discount attribute to be 0", 0.0, promotion.getDiscount(), 0.001);
 	}
 }

@@ -12,7 +12,6 @@ import com.rupertoss.checkout.repository.ItemRepository;
 @Service
 public class ItemService {
 	
-	// The Spring Data repository for Item entities.
 	@Autowired
 	private ItemRepository itemRepository;
 	

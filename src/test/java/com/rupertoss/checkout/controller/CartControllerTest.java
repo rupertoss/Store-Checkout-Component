@@ -151,10 +151,12 @@ public class CartControllerTest extends AbstractControllerTest {
 		Cart cart = getCart1StubData();
 		
 		String code = "X";
+		Promotion promotion = new Promotion();
+		promotion.setDiscount(0.0);
 		
 		when(cartService.getById(id)).thenReturn(cart);
 		
-		when(promotionService.getByCode(code)).thenReturn(null);
+		when(promotionService.getByCode(code)).thenReturn(promotion);
 		
 		String uri = "/api/carts/{id}/{code}";
 		
@@ -166,7 +168,7 @@ public class CartControllerTest extends AbstractControllerTest {
 		verify(cartService, times(1)).getById(id);
 		verify(promotionService, times(1)).getByCode(code);
 		
-		Assert.assertEquals("failure - expected HTTP status 404", 404, status);
+		Assert.assertEquals("failure - expected HTTP status 409", 409, status);
 		Assert.assertTrue("failure - expected HTTP body to have a value", content.trim().length() > 0);
 	}
 	
@@ -175,8 +177,9 @@ public class CartControllerTest extends AbstractControllerTest {
 		Long id = new Long(1);
 		Cart cart = getCart1StubData();
 		
-		String code = "10%OFF";
-		Promotion promotion = getPromotion2StubData();
+		String code = "5%OFF";
+		Promotion promotion = new Promotion();
+		promotion.setDiscount(0.0);
 		
 		when(cartService.getById(id)).thenReturn(cart);
 		

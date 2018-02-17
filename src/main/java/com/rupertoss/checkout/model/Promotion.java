@@ -41,6 +41,14 @@ public class Promotion {
 	public Promotion() {
 	}
 
+	public Promotion(int id, String code, String description, double discount, Calendar validTill) {
+		this.id = id;
+		this.code = code;
+		this.description = description;
+		this.discount = discount;
+		this.validTill = validTill;
+	}
+
 	public int getId() {
 		return id;
 	}
