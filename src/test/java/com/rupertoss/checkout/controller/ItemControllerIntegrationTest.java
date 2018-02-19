@@ -60,7 +60,7 @@ public class ItemControllerIntegrationTest extends AbstractControllerTest {
 
         String content = result.getResponse().getContentAsString();
         int status = result.getResponse().getStatus();
-
+        
         Assert.assertEquals("failure - expected HTTP status", 200, status);
         Assert.assertTrue("failure - expected HTTP response body to match", content.equals(json));
     }

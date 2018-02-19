@@ -1,7 +1,7 @@
 package com.rupertoss.checkout.model;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
@@ -32,7 +31,7 @@ public class Promotion {
 	
 	@NotNull
 	@Column(name = "Discount")
-	private double discount;
+	private BigDecimal discount;
 
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
@@ -41,7 +40,7 @@ public class Promotion {
 	public Promotion() {
 	}
 
-	public Promotion(int id, String code, String description, double discount, Calendar validTill) {
+	public Promotion(int id, String code, String description, BigDecimal discount, Calendar validTill) {
 		this.id = id;
 		this.code = code;
 		this.description = description;
@@ -53,40 +52,20 @@ public class Promotion {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getCode() {
 		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public double getDiscount() {
+	public BigDecimal getDiscount() {
 		return discount;
-	}
-
-	public void setDiscount(double discount) {
-		this.discount = discount;
 	}
 
 	public Calendar getValidTill() {
 		return validTill;
-	}
-
-	public void setValidTill(Calendar validTill) {
-		this.validTill = validTill;
 	}
 
 	@Override

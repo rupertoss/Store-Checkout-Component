@@ -1,5 +1,6 @@
 package com.rupertoss.checkout.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,8 +33,6 @@ public class PromotionService {
 				}
 			}
 		}
-		Promotion promotion = new Promotion();
-		promotion.setDiscount(0.0);
-		return promotion;
+		return new Promotion(0,null,null, BigDecimal.ZERO, null);
 	}
 }

@@ -1,5 +1,6 @@
 package com.rupertoss.checkout.controller;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,7 +94,8 @@ public class CartControllerIntegrationTest extends AbstractControllerTest {
 		
 		MvcResult result = mvc.perform(MockMvcRequestBuilders.get(uri, id, code).accept(MediaType.APPLICATION_JSON)).andReturn();
 		
-		cart.setValue(cart.getValue() * (100 - promotion.getDiscount())/100);
+		BigDecimal cartValue = cart.getValue().multiply(new BigDecimal("100.0").subtract(promotion.getDiscount()).divide(new BigDecimal("100.0")));
+		cart = new Cart(cart.getId(), cart.getItems(), cartValue);
 		String json = mapToJson(cart);
 		
 		String content = result.getResponse().getContentAsString();
@@ -165,7 +167,7 @@ public class CartControllerIntegrationTest extends AbstractControllerTest {
 		String uri = "/api/carts";
 		
 		Cart cart = getCart1StubData();
-		cart.setId(null);
+		cart = new Cart(null, getCart1StubData().getItems(), getCart1StubData().getValue());
 		String inputJson = mapToJson(cart);
 		
 		MvcResult result = mvc.perform(MockMvcRequestBuilders.post(uri)
@@ -177,7 +179,7 @@ public class CartControllerIntegrationTest extends AbstractControllerTest {
         String content = result.getResponse().getContentAsString();
         int status = result.getResponse().getStatus();
         
-        cart.setId(5L);
+        cart = new Cart(5L, getCart1StubData().getItems(), getCart1StubData().getValue());
         inputJson = mapToJson(cart);
         
         Assert.assertEquals("failure - expected HTTP status 201", 201, status);
@@ -190,8 +192,7 @@ public class CartControllerIntegrationTest extends AbstractControllerTest {
 		
 		Map<Integer, Integer> items = new HashMap<Integer, Integer>();
 		items.put(1, 1);
-		cart.setItems(items);
-		cart.setValue(40);
+		cart = new Cart(cart.getId(), items, cart.getValue());
 		
 		Long id = new Long(1);
 				

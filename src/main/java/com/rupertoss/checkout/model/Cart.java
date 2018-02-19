@@ -1,8 +1,8 @@
 package com.rupertoss.checkout.model;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -32,12 +32,12 @@ public class Cart {
 	private Map<Integer, Integer> items = new HashMap<Integer, Integer>();
 	
 	@Column(name = "Value")
-	private double value;
+	private BigDecimal value;
 	
 	public Cart() {
 	}
 	
-	public Cart(Long id, Map<Integer, Integer> items, double value) {
+	public Cart(Long id, Map<Integer, Integer> items, BigDecimal value) {
 		this.id = id;
 		this.items = items;
 		this.value = value;
@@ -47,24 +47,12 @@ public class Cart {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Map<Integer, Integer> getItems() {
 		return items;
 	}
 
-	public void setItems(Map<Integer, Integer> items) {
-		this.items = items;
-	}
-
-	public double getValue() {
+	public BigDecimal getValue() {
 		return value;
-	}
-
-	public void setValue(double value) {
-		this.value = value;
 	}
 
 	@Override

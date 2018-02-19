@@ -1,6 +1,7 @@
 package com.rupertoss.checkout;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -29,39 +30,23 @@ public abstract class AbstractControllerTest {
     }
 	
     protected Cart getCart1StubData() {
-		Cart cart = new Cart();
-		cart.setId(1L);
 		Map<Integer, Integer> items = new HashMap<>();
 		items.put(1, 5);
 		items.put(3, 2);
 		items.put(4, 3);
-		cart.setItems(items);
-		cart.setValue(250);
-		return cart;
+		return new Cart(1L, items, new BigDecimal("250.0"));
 	}
 	
     protected Promotion getPromotion1StubData() {
-		Promotion promotion = new Promotion();
-		promotion.setId(1);
-		promotion.setCode("Reduces items cost by 10%");
-		promotion.setDiscount(10);
 	    Calendar cal = Calendar.getInstance();
 	    cal.set(2019, 01, 30, 12, 0);
-		promotion.setValidTill(cal);
-		promotion.setDescription("Promo");
-		return promotion;
+		return new Promotion(2,"10%OFF", "Reduces items cost by 10%", new BigDecimal("10.0"), cal);
 	}
     
     protected Promotion getPromotion2StubData() {
-		Promotion promotion = new Promotion();
-		promotion.setId(2);
-		promotion.setCode("5%OFF");
-		promotion.setDiscount(5);
 	    Calendar cal = Calendar.getInstance();
 	    cal.set(2017, 01, 30, 12, 0);
-		promotion.setValidTill(cal);
-		promotion.setDescription("Reduces items cost by 5%");
-		return promotion;
+		return new Promotion(2,"5%OFF", "Reduces items cost by 5%", new BigDecimal("5.0"), cal);
 	}
 	
     protected List<Item> getItemListStubData() {
@@ -75,52 +60,22 @@ public abstract class AbstractControllerTest {
     }
 	
     protected Item getItem1StubData() {
-		Item item = new Item();
-		item.setId(1);
-		item.setDescription("Product A");
-		item.setPrice(40.0);
-		item.setSpecialPrice(35.0);
-		item.setSpecialQuantity(3);
-		return item;
+    	return new Item(1, "Product A", new BigDecimal("40.0"), new BigDecimal("35.0"), 3);
 	}
     
     protected Item getItem2StubData() {
-		Item item = new Item();
-		item.setId(2);
-		item.setDescription("Product B");
-		item.setPrice(20.0);
-		item.setSpecialPrice(15.0);
-		item.setSpecialQuantity(2);
-		return item;
+    	return new Item(2, "Product B", new BigDecimal("20.0"), new BigDecimal("15.0"), 2);
 	}
     
     protected Item getItem3StubData() {
-		Item item = new Item();
-		item.setId(3);
-		item.setDescription("Product C");
-		item.setPrice(30.0);
-		item.setSpecialPrice(24.0);
-		item.setSpecialQuantity(5);
-		return item;
+    	return new Item(3, "Product C", new BigDecimal("30.0"), new BigDecimal("24.0"), 5);
 	}
     
     protected Item getItem4StubData() {
-		Item item = new Item();
-		item.setId(4);
-		item.setDescription("Product D");
-		item.setPrice(5.0);
-		item.setSpecialPrice(4.5);
-		item.setSpecialQuantity(15);
-		return item;
+    	return new Item(4, "Product D", new BigDecimal("5.0"), new BigDecimal("4.5"), 15);
 	}
     
     protected Item getItem5StubData() {
-		Item item = new Item();
-		item.setId(5);
-		item.setDescription("Product E");
-		item.setPrice(25.0);
-		item.setSpecialPrice(20.0);
-		item.setSpecialQuantity(2);
-		return item;
+    	return new Item(5, "Product E", new BigDecimal("25.0"), new BigDecimal("20.0"), 2);
 	}
 }

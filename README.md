@@ -51,7 +51,5 @@ Clone the project to your host machine.
 Add administrator view perspective to perform more operations like adding items, promotions and more.
 
 * Spring Security
-* Hibernate HQL queries
-* OneToMany/ManyToMany etc. mapping
 * Logger
 * Actuator

@@ -1,5 +1,7 @@
 package com.rupertoss.checkout.controller;
 
+import java.math.BigDecimal;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,11 +70,11 @@ public class CartController {
 			}
 			
 		Promotion promotion = promotionService.getByCode(code);
-			if(promotion.getDiscount() == 0.0) {
+			if(promotion.getDiscount() == BigDecimal.ZERO) {
 				return new ResponseEntity<Cart>(cart, HttpStatus.CONFLICT);
 			}
 			
-		cartService.calculateCartValueWithPromotion(cart, promotion);
+		cart = cartService.calculateCartValueWithPromotion(cart, promotion);
 		
 		return new ResponseEntity<Cart>(cart, HttpStatus.OK);
 	}

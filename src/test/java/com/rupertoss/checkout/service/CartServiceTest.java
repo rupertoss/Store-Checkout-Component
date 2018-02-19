@@ -1,5 +1,6 @@
 package com.rupertoss.checkout.service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,10 +55,8 @@ public class CartServiceTest {
 	
 	@Test
 	public void testCreateCartEmpty() {
-		Cart cart = new Cart();
-		
 		Map<Integer, Integer> items = new HashMap<>();
-		cart.setItems(items);
+		Cart cart = new Cart(null, items, null);
 		
 		Cart createdCart = cartService.create(cart);
 		
@@ -66,31 +65,28 @@ public class CartServiceTest {
 		Assert.assertNotNull("failure - expected items attribute not null", createdCart.getItems());
 		Assert.assertNotNull("failure - expected value attribute not null", createdCart.getValue());
 		Assert.assertEquals("failure - expected items attribute match", items, createdCart.getItems());
-		Assert.assertEquals("failure - expected value attrubute match", 0, createdCart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attrubute match", BigDecimal.ZERO, createdCart.getValue());
 	}
 	
 	@Test
 	public void testCreateCartNotEmpty() {
-		Cart cart = new Cart();
-		
 		Map<Integer, Integer> items = new HashMap<>();
 		items.put(1, 1);
 		items.put(3, 5);
-		cart.setItems(items);
+		
+		Cart cart = new Cart(null, items, null);
 		
 		Cart createdCart = cartService.create(cart);
 		
 		Assert.assertEquals("failure - expected items attribute match", items, createdCart.getItems());
-		Assert.assertEquals("failure - expected value attribute match", 160.0, createdCart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attribute match", new BigDecimal("160.0").stripTrailingZeros(), createdCart.getValue().stripTrailingZeros());
 	}
 	
 	@Test
 	public void testCreateCartWithId() {
 		Exception exception = null;
 		
-		Cart cart = new Cart();
-		cart.setId(Long.MAX_VALUE);
-		cart.setItems(new HashMap<Integer, Integer>());
+		Cart cart = new Cart(Long.MAX_VALUE, new HashMap<Integer, Integer>(), null);
 		
 		try {
 			cartService.create(cart);
@@ -108,7 +104,7 @@ public class CartServiceTest {
 		
 		Cart cart = cartService.getById(id);
 		
-		double cartValue = cart.getValue();
+		BigDecimal cartValue = cart.getValue();
 		
 		Assert.assertNotNull("failure - expected not null", cart);
 		
@@ -120,16 +116,14 @@ public class CartServiceTest {
 		Assert.assertNotNull("failure - expected not null", updatedCart);
 		Assert.assertEquals("failure - expected id attribute match", id, updatedCart.getId());
 		Assert.assertEquals("failure - expected items attribute match", updatedItems, updatedCart.getItems());
-		Assert.assertEquals("failure - expected value attrubute match", cartValue + 40, updatedCart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attrubute match", cartValue.add(new BigDecimal("40.0")), updatedCart.getValue());
 	}
 	
 	@Test
 	public void testUpdateNotFound() {
 		Exception exception = null;
 		
-		Cart cart = new Cart();
-		cart.setId(Long.MAX_VALUE);
-		cart.setItems(new HashMap<Integer, Integer>());
+		Cart cart = new Cart(Long.MAX_VALUE, new HashMap<Integer, Integer>(), null);
 		
 		try {
 			cartService.update(cart);
@@ -160,8 +154,7 @@ public class CartServiceTest {
 	public void testDeleteNotFound() {
 		Exception exception = null;
 		
-		Cart cart = new Cart();
-		cart.setId(Long.MAX_VALUE);
+		Cart cart = new Cart(Long.MAX_VALUE, null, null);
 		
 		try {
 			cartService.delete(cart.getId());
@@ -175,47 +168,39 @@ public class CartServiceTest {
 	
 	@Test
 	public void testCalculateCartValueEmpty() {
-		Cart cart = new Cart();
-		
-		Map<Integer, Integer> items = new HashMap<>();
-		cart.setItems(items);
+		Cart cart = new Cart(null, new HashMap<Integer, Integer>(), null);
 		
 		Cart emptyCart = cartService.create(cart);
 		
 		Assert.assertNotNull("failure - expected not null", emptyCart);
-		Assert.assertEquals("failure - expected value attribute match", 0, emptyCart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attribute match", BigDecimal.ZERO, emptyCart.getValue());
 	}
 	
 	@Test
 	public void testCalculateCartValue() {
-		Cart cart = new Cart();
-		
 		Map<Integer, Integer> items = new HashMap<>();
 		items.put(1, 1);
 		items.put(3, 5);
-		cart.setItems(items);
+		
+		Cart cart = new Cart(null, items, null);
 		
 		cart = cartService.create(cart);
 		
 		Assert.assertNotNull("failure - expected not null", cart);
-		Assert.assertEquals("failure - expected value attribute match", 160.0, cart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attribute match", new BigDecimal("160.0").stripTrailingZeros(), cart.getValue().stripTrailingZeros());
 	}
 	
 	@Test
 	public void testCalculateCartValueWithPromotion() {
-		Cart cart = new Cart();
-		
 		Map<Integer, Integer> items = new HashMap<>();
 		items.put(1, 1);
 		items.put(3, 5);
-		cart.setItems(items);
 		
-		Promotion promotion = new Promotion();
-		promotion.setDiscount(10);
+		Cart cart = new Cart(null, items, null);
 		
-		Double cartValueWithPromotion = cartService.calculateCartValueWithPromotion(cart, promotion);
+		BigDecimal cartValueWithPromotion = cartService.calculateCartValueWithPromotion(cart, new Promotion(0,null,null, new BigDecimal("10.0"), null)).getValue();
 		
 		Assert.assertNotNull("failure - expected not null", cartValueWithPromotion);
-		Assert.assertEquals("failure - expected value attribute match", 144.0, cart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attribute match", new BigDecimal("144.0").stripTrailingZeros(), cartValueWithPromotion.stripTrailingZeros());
 	}
 }

@@ -1,5 +1,7 @@
 package com.rupertoss.checkout.service;
 
+import java.math.BigDecimal;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +44,6 @@ public class PromotionServiceTest {
 		
 		Promotion promotion = promotionService.getByCode(code);
 		
-		Assert.assertEquals("failure - expected discount attribute to be 0", 0.0, promotion.getDiscount(), 0.001);
+		Assert.assertEquals("failure - expected discount attribute to be 0", BigDecimal.ZERO, promotion.getDiscount());
 	}
 }

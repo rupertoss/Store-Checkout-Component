@@ -1,5 +1,6 @@
 package com.rupertoss.checkout.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +44,19 @@ public class ItemService {
 	 * 	
 	 * @param id An Integer primary key identifier of Item entity.
 	 * @param quantity An Integer quantity.
-	 * @return A Double representing cost of Item.
+	 * @return A BidDecimal representing cost of Item.
 	 */
-	public double calculateItemCost(Integer id, Integer quantity) {
+	public BigDecimal calculateItemCost(Integer id, Integer quantity) {
+		if (id == null) {
+			return BigDecimal.ZERO;
+		}
+		
 		Item item = itemRepository.findOne(id);
+		
 		if(quantity >= item.getSpecialQuantity()) {
-			return (item.getSpecialPrice() * quantity);
+			return (item.getSpecialPrice().multiply(new BigDecimal(quantity)));
 		} else {
-			return item.getPrice() * quantity;
+			return item.getPrice().multiply(new BigDecimal(quantity));
 		}
 	}
 }

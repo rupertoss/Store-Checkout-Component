@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 import org.junit.Assert;
@@ -102,12 +103,13 @@ public class CartControllerTest extends AbstractControllerTest {
 		
 		String code = "10%OFF";
 		Promotion promotion = getPromotion1StubData();
+		cart = new Cart(cart.getId(), cart.getItems(), new BigDecimal("36"));
 		
 		when(cartService.getById(id)).thenReturn(cart);
 		
 		when(promotionService.getByCode(code)).thenReturn(promotion);
 		
-		when(cartService.calculateCartValueWithPromotion(cart, promotion)).thenReturn(36d);
+		when(cartService.calculateCartValueWithPromotion(cart, promotion)).thenReturn(cart);
 		
 		String uri = "/api/carts/{id}/{code}";
 		
@@ -151,12 +153,10 @@ public class CartControllerTest extends AbstractControllerTest {
 		Cart cart = getCart1StubData();
 		
 		String code = "X";
-		Promotion promotion = new Promotion();
-		promotion.setDiscount(0.0);
 		
 		when(cartService.getById(id)).thenReturn(cart);
 		
-		when(promotionService.getByCode(code)).thenReturn(promotion);
+		when(promotionService.getByCode(code)).thenReturn(new Promotion(0,null,null, BigDecimal.ZERO, null));
 		
 		String uri = "/api/carts/{id}/{code}";
 		
@@ -178,12 +178,10 @@ public class CartControllerTest extends AbstractControllerTest {
 		Cart cart = getCart1StubData();
 		
 		String code = "5%OFF";
-		Promotion promotion = new Promotion();
-		promotion.setDiscount(0.0);
 		
 		when(cartService.getById(id)).thenReturn(cart);
 		
-		when(promotionService.getByCode(code)).thenReturn(promotion);
+		when(promotionService.getByCode(code)).thenReturn(new Promotion(0,null,null, BigDecimal.ZERO, null));
 		
 		String uri = "/api/carts/{id}/{code}";
 		
@@ -229,15 +227,14 @@ public class CartControllerTest extends AbstractControllerTest {
 		Assert.assertNotNull("failure - expected items attribute not null", createdCart.getItems());
 		Assert.assertNotNull("failure - expected value attribute not null", createdCart.getValue());
 		Assert.assertEquals("failure - expected items attribute match", cart.getItems(), createdCart.getItems());
-		Assert.assertEquals("failure - expected value attrubute match", cart.getValue(), createdCart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attrubute match", cart.getValue(), createdCart.getValue());
 	}
 	
 	@Test
 	public void testUpdateCart() throws Exception {
-		Cart cart = getCart1StubData();
-		cart.setItems(new HashMap<Integer, Integer>());
-		Long id = new Long(1);
-				
+		Long id = getCart1StubData().getId();
+		Cart cart = new Cart(getCart1StubData().getId(), new HashMap<Integer, Integer>(), getCart1StubData().getValue());
+						
 		when(cartService.update(any(Cart.class))).thenReturn(cart);
 		
 		String uri = "/api/carts/{id}";
@@ -264,7 +261,7 @@ public class CartControllerTest extends AbstractControllerTest {
 		Assert.assertNotNull("failure - expected value attribute not null", updatedCart.getValue());
 		Assert.assertEquals("failure - expected id attribute match", cart.getId(), updatedCart.getId());
 		Assert.assertEquals("failure - expected items attribute match", cart.getItems(), updatedCart.getItems());
-		Assert.assertEquals("failure - expected value attrubute match", cart.getValue(), updatedCart.getValue(), 0.001);
+		Assert.assertEquals("failure - expected value attrubute match", cart.getValue(), updatedCart.getValue());
 	}
 	
 	@Test

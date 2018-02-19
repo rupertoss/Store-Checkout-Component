@@ -1,5 +1,6 @@
 package com.rupertoss.checkout.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Assert;
@@ -60,9 +61,9 @@ public class ItemServiceTest {
 		Integer id = new Integer(3);
 		Integer quantity = new Integer(4);
 		
-		Double regularCost = itemService.calculateItemCost(id, quantity);
+		BigDecimal regularCost = itemService.calculateItemCost(id, quantity);
 		
-		Assert.assertEquals("failure - expected Item cost with regular price", 120.0, regularCost, 0.001);
+		Assert.assertEquals("failure - expected Item cost with regular price", new BigDecimal("120.0").stripTrailingZeros(), regularCost.stripTrailingZeros());
 	}
 	
 	@Test
@@ -70,8 +71,8 @@ public class ItemServiceTest {
 		Integer id = new Integer(3);
 		Integer quantity = new Integer(5);
 		
-		Double specialCost = itemService.calculateItemCost(id, quantity);
+		BigDecimal specialCost = itemService.calculateItemCost(id, quantity);
 		
-		Assert.assertEquals("failure - expected Item cost with special price", 120.0, specialCost, 0.001);
+		Assert.assertEquals("failure - expected Item cost with special price", new BigDecimal("120.0").stripTrailingZeros(), specialCost.stripTrailingZeros());
 	}
 }

@@ -1,5 +1,7 @@
 package com.rupertoss.checkout.service;
 
+import java.math.BigDecimal;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.NoResultException;
 
@@ -40,8 +42,8 @@ public class CartService {
 		
 		if(cart.getId() != null)
 			throw new EntityExistsException("The id attribute must be null to persist a new entity.");
-		cart.setValue(calculateCartValue(cart));
-		return cartRepository.save(cart);
+		
+		return cartRepository.save(calculateCartValue(cart));
 	}
 	
 	/**
@@ -58,10 +60,7 @@ public class CartService {
 		if(cartToUpdate == null) 
 			throw new NoResultException("Requested entity not found.");
 		
-		cartToUpdate.setItems(cart.getItems());
-		cartToUpdate.setValue(calculateCartValue(cart));
-		
-		return cartRepository.save(cartToUpdate);	
+		return cartRepository.save(calculateCartValue(cart));	
 	}
 	
 	/**
@@ -83,16 +82,19 @@ public class CartService {
 	 * If Cart is empty returns 0.
 	 * 
 	 * @param cart A Cart object to calculate its value.
-	 * @return Double Cart value.
+	 * @return Cart object with calculated value.
 	 */
-	public double calculateCartValue(Cart cart) {
-		cart.setValue(0);
+	public Cart calculateCartValue(Cart cart) {
+		
+		BigDecimal cartValue = BigDecimal.ZERO;
 		if (!cart.getItems().isEmpty()) {
-			cart.getItems().forEach((k,v) -> {
-				cart.setValue(cart.getValue() + itemService.calculateItemCost(k, v));
-			}); 
+			cartValue = cart.getItems()
+					.keySet()
+					.stream()
+					.map((x) -> itemService.calculateItemCost(x, cart.getItems().get(x)))
+					.reduce(BigDecimal.ZERO, (x,y) -> x.add(y));
 		}
-		return cart.getValue();
+		return new Cart(cart.getId(), cart.getItems(), cartValue);
 	}
 
 	/**
@@ -100,10 +102,11 @@ public class CartService {
 	 * 
 	 * @param cart A Cart object to calculate its value.
 	 * @param promotion A Promotion object containing discount.
-	 * @return Double Cart value with promotion discount.
+	 * @return Cart object calculated with promotion discount.
 	 */
-	public double calculateCartValueWithPromotion(Cart cart, Promotion promotion) {
-		cart.setValue(calculateCartValue(cart) * (100 - promotion.getDiscount()) / 100);
-		return cart.getValue();
+	public Cart calculateCartValueWithPromotion(Cart cart, Promotion promotion) {
+		BigDecimal cartValue = calculateCartValue(cart).getValue()
+				.multiply((new BigDecimal("100.0").subtract(promotion.getDiscount()).divide(new BigDecimal("100.0"))));
+		return new Cart(cart.getId(), cart.getItems(), cartValue);
 	}
 }
